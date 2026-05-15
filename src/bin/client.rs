@@ -11,6 +11,9 @@ async fn main() -> Result<(), tokio_websockets::Error> {
             .connect()
             .await?;
 
+    println!("Connected to chat server at ws://127.0.0.1:8080");
+    println!("Type a message and press enter to send it.");
+
     let stdin = tokio::io::stdin();
     let mut stdin = BufReader::new(stdin).lines();
 
@@ -29,7 +32,7 @@ async fn main() -> Result<(), tokio_websockets::Error> {
                 match incoming {
                     Some(Ok(msg)) => {
                         if let Some(text) = msg.as_text() {
-                            println!("Message received: {text}");
+                            println!("Message received from another client: {text}");
                         }
                     }
                     _ => break,

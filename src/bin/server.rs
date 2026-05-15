@@ -32,7 +32,9 @@ async fn handle_connection(
             msg = bcast_rx.recv() => {
                 let (sender_addr, text) = msg?;
                 if sender_addr != addr {
-                    ws_stream.send(Message::text(format!("{sender_addr}: {text}"))).await?;
+                    ws_stream
+                        .send(Message::text(format!("From {sender_addr} -> {text}")))
+                        .await?;
                 }
             }
         }

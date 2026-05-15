@@ -39,3 +39,17 @@ Saat pesan diketik pada salah satu client, server akan membaca pesan tersebut da
 ![](images/Screenshot%202026-05-15%20204236.png)
 
 Pada percobaan ini, port WebSocket perlu diperhatikan pada sisi server dan sisi client. Server menggunakan `TcpListener::bind(...)` untuk menentukan alamat dan port tempat aplikasi menerima koneksi masuk. Client menggunakan `ClientBuilder::from_uri(...)` untuk menentukan alamat WebSocket yang akan dituju ketika ingin terhubung ke server. Jika hanya port di client yang diubah, client akan mencoba terhubung ke alamat yang berbeda dari alamat yang sedang didengarkan oleh server. Akibatnya, koneksi akan gagal karena tidak ada server yang menerima koneksi pada port tersebut. Oleh karena itu, perubahan port seharusnya dilakukan secara konsisten pada kedua sisi agar server dan client tetap menggunakan alamat yang sama. Keduanya tetap memakai protokol `ws://`, yaitu WebSocket tanpa TLS, sehingga format URL dan konfigurasi listener harus saling cocok.
+
+## Experiment 2.3 - Small changes. Add some information to client
+
+**Server**
+![](images/Screenshot%202026-05-15%20210924.png)
+
+**Client 1**
+![](images/Screenshot%202026-05-15%20210930.png)
+
+**Client 2**
+![](images/Screenshot%202026-05-15%20210936.png)
+
+Pada percobaan ini, saya melakukan perubahan kecil pada format pesan agar client dapat melihat informasi pengirim dengan lebih jelas. Server sudah mengetahui alamat setiap client dari `SocketAddr` ketika koneksi diterima, sehingga informasi IP dan port dapat digunakan sebagai identitas sementara. Karena aplikasi ini belum memiliki fitur nama pengguna, IP dan port menjadi cara paling sederhana untuk membedakan satu client dengan client lain. Server mengirim pesan ke client lain dalam format `From 127.0.0.1:PORT -> pesan`, sehingga penerima dapat langsung mengetahui dari koneksi mana pesan tersebut berasal. Client juga diubah agar menampilkan pesan masuk dengan teks `Message received from another client`, sehingga output terminal lebih mudah dipahami. Perubahan ini membantu menjelaskan bahwa pesan tidak dikirim langsung dari satu client ke client lain, tetapi lewat server sebagai perantara. Dengan melihat IP dan port pada output, alur pengiriman pesan menjadi lebih sound karena setiap pesan dapat ditelusuri dari pengirim sampai penerimanya.
+
